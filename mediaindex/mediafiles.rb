@@ -2,7 +2,17 @@
 
 require 'find'
 
-path = "/tmp"
+if ARGV.length == 0
+  puts "Usage: #{$0} <directory to scan>"
+  exit(1)
+end
+
+if FileTest.directory?ARGV[0]
+  path = ARGV[0]
+else
+  puts "#{ARGV[0]} is not a directory."
+  exit(2)
+end
 
 # array declarations
 mediafiles = Array.new
