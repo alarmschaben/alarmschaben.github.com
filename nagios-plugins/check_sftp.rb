@@ -11,7 +11,7 @@ class Sftp_probe < Nagios::Probe
   @data = nil
 
   def measure
-     Net::SFTP.start(@opts['host'], @opts['username'], :password => 'password') do |sftp|
+     Net::SFTP.start(@opts['host'], @opts['username'], :keys => @opts['keys']) do |sftp|
       sftp.file.open(@opts['filename'], "r") do |f|
         @data = f.gets.chomp
       end
@@ -47,15 +47,16 @@ end
 
 begin
 
-  if ARGV.length != 4
-    raise "Usage: #{$0} <host> <username> <filename with path> <checkstring>"
+  if ARGV.length < 4
+    raise "Usage: #{$0} <host> <username> <filename with path> <checkstring> [keyfile]"
   end
 
   options = { 
     'host' => ARGV[0], 
     'username' => ARGV[1], 
     'filename' => ARGV[2],
-    'checkstring' => ARGV[3]
+    'checkstring' => ARGV[3],
+    'keys' => ARGV[4]
   }
 
   probe = Sftp_probe.new(options)
